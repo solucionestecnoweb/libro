@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_nimetrix-sync-batch_nimetrix-sync-batch,nimetrix-sync-batch.nimetrix-sync-batch,model_config_connection,base.group_user,1,1,1,1
+access_nimetrix-sync-batch_nimetrix-sync-batch-line,nimetrix-sync-batch.nimetrix-sync-batch-line,model_config_connection_line,base.group_user,1,1,1,1
+access_nimetrix-sync-batch_nimetrix-sync-batch-line-system,nimetrix-sync-batch.nimetrix-sync-batch-line-system,model_config_connection_line,base.group_system,1,1,1,1
+access_nimetrix-sync-batch_nimetrix-sync-batch-system,nimetrix-sync-batch.nimetrix-sync-batch-system,model_config_connection,base.group_system,1,1,1,1
+access_nimetrix-sync-batch_nimetrix-log,nimetrix-sync-batch.nimetrix-log,model_sicbatch_log,base.group_user,1,1,1,1
