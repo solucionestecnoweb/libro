@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- STOCK.LANDED.COST -->
+        <record id='view_stock_landed_cost_form_inherit' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.form.inherit</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+            <field name="arch" type="xml">
+                <!-- <button name="vendor_bill_ids" position="after">
+                    <button name="populate_vendor_bill_ids" string="Obtener lineas" type="object"/>
+                </button> -->
+                <!-- <field name='picking_ids' position='attributes'>
+                    <attribute name="domain">[('invoice_id','in',vendor_bill_ids)]</attribute>
+                </field> -->
+                <field name='vendor_bill_id' position='attributes'>
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name='vendor_bill_id' position='after'>
+                    <field name='vendor_bill_ids' domain="[('type','=','in_invoice')]" widget="many2many_tags"/>
+                    <button name="populate_vendor_bill_ids" string="Obtener lineas" type="object"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
