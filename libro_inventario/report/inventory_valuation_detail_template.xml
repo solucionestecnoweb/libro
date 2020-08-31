@@ -39,7 +39,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <span style="font-size: 20px; color: #0406b3;">Reporte de Moviemento de Inventario <span t-esc="o.category_id.name"/> Periodo <t t-esc="o.date_to.year"/>-
+                        <span style="font-size: 20px; color: #0406b3;">Reporte de Moviemento de Inventario <span t-esc="o.category_id.name"/> Periodo  <t t-esc="o.date_to.year"/>-
                                             <t t-if="o.date_to.month>9">
                                                 <t t-esc="o.date_to.month"/>
                                             </t>
