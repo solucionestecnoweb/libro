@@ -102,7 +102,7 @@ class ReporteCategoria(models.TransientModel):
                     if salida > 0:
                         libro.cantidad_salidas = cantidad_salidas
                         libro.total_bolivares_salida = monto_salida
-                        libro.costo_salidas = monto_salida / salida
+                        libro.costo_salidas = monto_salida / salida if salida > 0 else cantidad_salidas / monto_salida
 
 
         self.libro =  self.env['libro.inventario.categoria'].search([])

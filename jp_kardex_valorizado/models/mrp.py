@@ -13,10 +13,10 @@ class MrpProduction(models.Model):
 
     def picking_mrp(self):
         
-        tipo_salida = self.env['type.operation.kardex'].search([('code','=','19')])
+        tipo_salida = self.env['type.operation.kardex'].search([('code','=','10')])
         for t in self.move_raw_ids:
             t.type_operation_sunat_id = tipo_salida[0].id
 
-        tipo_entrada = self.env['type.operation.kardex'].search([('code','=','10')])
+        tipo_entrada = self.env['type.operation.kardex'].search([('code','=','19')])
         for k in self.move_finished_ids:
             k.type_operation_sunat_id = tipo_entrada[0].id
