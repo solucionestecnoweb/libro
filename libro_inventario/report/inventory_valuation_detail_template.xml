@@ -39,9 +39,15 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <span style="font-size: 20px; color: #0406b3;">Reporte de Moviemento de Inventario <span t-esc="o.category_id.name"/></span>
+                        <span style="font-size: 20px; color: #0406b3;">Reporte de Moviemento de Inventario <span t-esc="o.category_id.name"/> Periodo <t t-esc="o.date_to.year"/>-
+                                            <t t-if="o.date_to.month>9">
+                                                <t t-esc="o.date_to.month"/>
+                                            </t>
+                                            <t t-if="not o.date_to.month>9">
+                                                0<t t-esc="o.date_to.month"/>
+                                            </t></span>
 						<br/>
-						<span style="font-size: 20px; color: #0406b3;">Desde: <span t-esc="o.date_from"/>  Hasta: <span t-esc="o.date_to"/></span>
+						<span style="font-size: 20px; color: #0406b3;">Desde: <span t-field="o.date_from"/>  Hasta: <span t-field="o.date_to"/></span>
                     </div>
                 </div>
             </div>
@@ -62,6 +68,11 @@
 		<t t-call="web.html_container">
 			<t t-foreach="docs" t-as="o">
 				<t t-call="libro_inventario.external_layout_inventario">
+					<br/>
+					<br/>
+					<br/>
+					<br/>
+					<br/>
 					<br/>
 					<div class="page">
 						

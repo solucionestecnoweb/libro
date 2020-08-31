@@ -91,7 +91,7 @@ class ProductProduct(models.Model):
                     if line[14] and line[15] == False or line[14] and line[15] == True :
                         last_price = last_price
                     else:
-                        last_price = saldo_total / saldo if saldo_total else 0
+                        last_price = saldo_total / saldo if saldo_total and saldo > 0 else 0
                 else:
                     saldo_total = saldo_total + ing - sal
 
