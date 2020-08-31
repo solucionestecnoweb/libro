@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<template id="sales_daybook_template">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="o">
+				<t t-call="web.basic_layout">
+					<br/>
+					<div class="page">
+						<div class="row">
+							<div class="col-4">
+								<h5><b><span t-esc="o.company_id.name"/> RIF- <span t-esc="o.company_id.partner_id.doc_type"/>-<span t-esc="o.company_id.partner_id.vat"/></b></h5>
+
+							</div>
+							<div class="col-4">
+							</div>
+							<div class="col-4 text-right">
+								<div class="row">
+									<div class="col-7">
+									</div>
+									<div class="col-2">
+										<span>FECHA:</span> <br/>
+									</div>
+									<div class="col-2">
+										<span><span t-esc="o.date_report"/> </span> <br/>
+									</div>
+									<div class="col-1">
+									</div>
+								</div>
+							</div>
+						</div>
+						<center>
+							<h2 style="color: #0900b3;font-size:20;"><b>Reporte de Moviemento de Inventario</b></h2>
+						
+							<table width='100%'>
+								<tr>
+									<th style="border-top: 1px solid black;" class="text-center"></th>
+									<th style="border-top: 1px solid black;" class="text-center"></th>
+									<th colspan="3" style="border-top: 1px solid black;" class="text-center"><b>Inventario  Inicial</b></th>
+									<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>Entradas  del  Mes</b></th>
+									<th style="border-top: 1px solid black;" class="text-center"></th>
+									<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>Salidas  del  Mes</b></th>
+									<th style="border-top: 1px solid black;" class="text-center"></th>
+									<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>Inventario  Final</b></th>
+									<th style="border-top: 1px solid black;" class="text-center"></th>
+								</tr>
+								<tr>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Código</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Unidad  Descripción</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Existencia  Inicial</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Costo  Inicial </b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Total  Bolivares</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Cantidad  Entradas</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Costo  de  Entradas</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Total  Bolivares</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Cantidad  Salidas</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Costo  de  Salidas</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Total  Bolivares</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Stock  Final</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Costo  Promedio</b></th>
+									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Total  Bolivares</b></th>
+								</tr>
+								<t t-set="categoria" t-value=""/>
+								<t t-set="validar"   t-value="True"/>
+
+								<t t-foreach="o.libro" t-as="k">
+										<tr>
+											<th class="text-center"><b>LÍNEA:</b></th>
+											<th class="text-center"><b><span t-esc="k.name.name"/> </b></th>
+											
+										</tr>
+										<tr>
+											<th colspan="14" style="border-bottom: 1px solid black; border-style: dotted; color: white">
+											---
+											</th>
+										</tr>
+									
+										<tr t-foreach="k.line_id" t-as="l">
+											<th class="text-center"></th>
+											<th class="text-center"><span t-esc="l.name.name"/></th>
+
+											<th class="text-center"><span t-esc="l.cantidad_inicial"/></th>
+											<th class="text-center"><span t-esc="l.costo_intradas"/></th>
+											<th class="text-center"><span t-esc="l.total_bolivares_inicial"/></th>
+
+											<th class="text-center"><span t-esc="l.cantidad_entradas"/></th>
+											<th class="text-center"><span t-esc="l.costo_entradas"/></th>
+											<th class="text-center"><span t-esc="l.total_bolivares_entradas"/></th>
+
+											<th class="text-center"><span t-esc="l.cantidad_salidas"/></th>
+											<th class="text-center"><span t-esc="l.costo_salidas"/></th>
+											<th class="text-center"><span t-esc="l.total_bolivares_salida"/></th>
+
+											<th class="text-center"><span t-esc="l.total"/></th>
+											<th class="text-center"><span t-esc="l.promedio"/></th>
+											<th class="text-center"><span t-esc="l.total_bolivares"/></th>
+										</tr>
+										<tr>
+											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>TOTAL  LÍNEA:</b></th>
+											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>0.000,00</b></th>
+											<th style="border-top: 1px solid black;" class="text-center"><b>***.***.***,**</b></th>
+											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>0.000,00</b></th>
+											<th style="border-top: 1px solid black;" class="text-center"><b>***.***.***,**</b></th>
+											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>0.000,00</b></th>
+											<th style="border-top: 1px solid black;" class="text-center"><b>***.***.***,**</b></th>
+											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>0.000,00</b></th>
+											<th style="border-top: 1px solid black;" class="text-center"><b>***.***.***,**</b></th>
+										</tr>
+										<tr>
+											<th colspan="14" style="color: white;" class="text-center">
+											--------------------------------------------------------------------------------------------------------------------------------------
+											--------------------------------------------------------------------------------------------------------------------------------------
+											--------------------------------------------------------------------------------------------------------------------------------------
+											</th>
+										</tr>
+									
+								</t>
+								
+							</table>
+						</center>
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+
+	<report
+          id="movimientos_categoria_libro"
+          string="Libro de Inventario"
+          model="stock.move.report.categoria"
+          report_type="qweb-pdf"
+          file="libro_inventario.sales_daybook_template"
+          name="libro_inventario.sales_daybook_template"
+          paperformat="libro_inventario.paperformat_libro_inventario"
+          />
+</odoo>
