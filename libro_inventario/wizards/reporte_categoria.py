@@ -15,7 +15,7 @@ class ReporteCategoria(models.TransientModel):
     date_to = fields.Date('Date To', default=lambda *a:(datetime.now() + timedelta(days=(1))).strftime('%Y-%m-%d'))
     category_id = fields.Many2one(comodel_name='product.category', string='Categoria')
     product = fields.Many2many(comodel_name='product.product', string='product')
-    
+    date_today = fields.Date(string='Date Today', default=lambda *a:datetime.now().strftime('%Y-%m-%d'))
     company_id = fields.Many2one('res.company','Company',default=lambda self: self.env.user.company_id.id)
     date_report = fields.Date(string='day', default=lambda *a:datetime.now().strftime('%Y-%m-%d'))
 
@@ -73,27 +73,36 @@ class ReporteCategoria(models.TransientModel):
                     ])
                 cantidad = len(kardex_line)
 
-                libro.cantidad_inicial = kardex_line[0].cantidad_inicial
-                libro.costo_intradas   = kardex_line[0].costo_intradas
-                libro.total_bolivares_inicial = kardex_line[0].total_bolivares_inicial
+                inicial =  self.env['product.product.kardex.line'].search([
+                    ('name','=',item.id),
+                    ('fecha','<',self.date_from),
+                    ])
+                if len(inicial) == 0:
+                    libro.cantidad_inicial = kardex_line[0].total 
+                    libro.costo_intradas   = kardex_line[0].promedio
+                    libro.total_bolivares_inicial = kardex_line[0].total_bolivares
+                else :
+                    libro.cantidad_inicial = inicial[0].total 
+                    libro.costo_intradas   = inicial[0].promedio
+                    libro.total_bolivares_inicial = inicial[0].total_bolivares
+                if len(kardex_line) > 0:
+                    libro.total = kardex_line[cantidad -1].total
+                    libro.promedio = kardex_line[cantidad-1].promedio
+                    libro.total_bolivares = kardex_line[cantidad-1].total_bolivares
 
-                libro.total = kardex_line[cantidad -1].total
-                libro.promedio = kardex_line[cantidad-1].promedio
-                libro.total_bolivares = kardex_line[cantidad-1].total_bolivares
-
-                for sal in kardex_line :
-                    if sal.cantidad_salidas > 0:
-                        salida += 1 
-                        monto_salida += sal.total_bolivares_salida
-                        cantidad_salidas += sal.cantidad_salidas
-                    else :
-                        libro.cantidad_entradas += sal.cantidad_entradas
-                        libro.costo_entradas +=  sal.costo_entradas
-                        libro.total_bolivares_entradas += sal.total_bolivares_entradas
-                
-                libro.cantidad_salidas = cantidad_salidas
-                libro.total_bolivares_salida = monto_salida
-                libro.costo_salidas = monto_salida / salida
+                    for sal in kardex_line :
+                        if sal.cantidad_salidas > 0:
+                            salida += 1 
+                            monto_salida += sal.total_bolivares_salida
+                            cantidad_salidas += sal.cantidad_salidas
+                        else :
+                            libro.cantidad_entradas += sal.cantidad_entradas
+                            libro.costo_entradas +=  sal.costo_entradas
+                            libro.total_bolivares_entradas += sal.total_bolivares_entradas
+                    if salida > 0:
+                        libro.cantidad_salidas = cantidad_salidas
+                        libro.total_bolivares_salida = monto_salida
+                        libro.costo_salidas = monto_salida / salida
 
 
         self.libro =  self.env['libro.inventario.categoria'].search([])
