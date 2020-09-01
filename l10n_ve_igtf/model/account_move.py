@@ -5,6 +5,10 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
+class AccontPartialReconcile(models.Model):
+    _inherit = "account.partial.reconcile"
+
+    consi_secu_move_id=fields.Many2one('account.move', string='Asiento secundario de la factura')
 
 class AccountMove(models.Model):
     _name = "account.move"
@@ -141,7 +145,7 @@ class AccountMove(models.Model):
                  'partner_id': self.partner_id.id,
                  #'partner_id': 45,
                  'journal_id': self.journal_id.id,
-                 'account_id': cuenta_a,# aqui va cirnta de anticipo 
+                 'account_id': cuenta_a,# aqui va cuenta de anticipo 
                  'amount_currency': 0.0,
                  'date_maturity': False,
                  #'credit': float(amount_itf),
@@ -181,6 +185,11 @@ class AccountMove(models.Model):
     def button_draft(self):
         super().button_draft()
         #raise UserError(_('Mi Bebe:%s')%self)
+        # LINEA DE CODIGO QUE ELIMINA LAS CONSILIACIONES SECUNDARIAS DE ANTICIPO
+        conciliacion=self.env['account.partial.reconcile'].search([('consi_secu_move_id','=',self.id)])
+        conciliacion.with_context(force_delete=True).unlink()
+        # FIN LINEA DE CODIGO QUE ELIMINA LAS CONSILIACIONES SECUNDARIAS DE ANTICIPO
+
         monto_factura=self.amount_total
         monto_residual=self.amount_residual
         saldo_actual=self.payment_id.saldo_disponible
@@ -227,7 +236,7 @@ class AccountMove(models.Model):
             tipo_empresa=self.type
             if tipo_empresa=="in_invoice" or tipo_empresa=="out_refund":#aqui si la empresa es un proveedor
                 type_internal="payable"
-            if tipo_empresa=="out_invoice" or tipo_empresa=="in_refund":# aqui si la empresa es cliente
+            if tipo_empresa=="out_invoice" or tipo_empresa=="in_refund":# aqui si la empresa es un cliente
                 type_internal="receivable"
             busca_movimientos = self.env['account.move'].search([('id','=',id_move)])
             for det_movimientos in busca_movimientos:
@@ -274,6 +283,40 @@ class AccountMove(models.Model):
                  'max_date':self.date,
             }
             #raise UserError(_('value = %s')%value)
+            self.env['account.partial.reconcile'].create(value)
+
+            # NUEVO CODIGO PARA CONCILIAR MOVIMIENTOS SECUNDARIOS 
+            id_payment.id
+            busca_line_mov3 = self.env['account.move.line'].search([('payment_id','=',id_payment.id),('account_internal_type','=',type_internal),('parent_state','!=','cancel')])
+            for det_line_move3 in busca_line_mov3:
+                if det_line_move3.credit==0:
+                    id_move_debit=det_line_move3.id
+                    monto_debit=det_line_move3.debit
+                if det_line_move3.debit==0:
+                    id_move_credit=det_line_move3.id
+                    monto_credit=det_line_move3.credit
+            busca_line_mov4 = self.env['account.move.line'].search([('move_id','=',id_move_conci),('account_internal_type','=',type_internal),('parent_state','!=','cancel')])
+            for det_line_move4 in busca_line_mov4:
+                if det_line_move3.debit==0:
+                    if det_line_move4.credit==0:
+                        id_move_debit=det_line_move4.id
+                        monto_debit=det_line_move4.debit
+                if det_line_move3.credit==0:
+                    if det_line_move4.debit==0:
+                        id_move_credit=det_line_move4.id
+                        monto_credit=det_line_move4.credit
+
+            if tipo_empresa=="in_invoice" or tipo_empresa=="out_refund":
+                monto=monto_debit
+            if tipo_empresa=="out_invoice" or tipo_empresa=="in_refund":
+                monto=monto_credit
+            value = {
+            'debit_move_id':id_move_debit,
+            'credit_move_id':id_move_credit,
+            'amount':monto,
+            'max_date':self.date,
+            'consi_secu_move_id':self.id,
+            }
             self.env['account.partial.reconcile'].create(value)
             #raise UserError(_('value = %s')%self.env['account.partial.reconcile'].create(value))
 
