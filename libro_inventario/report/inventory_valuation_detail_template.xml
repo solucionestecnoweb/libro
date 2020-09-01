@@ -68,17 +68,22 @@
 		<t t-call="web.html_container">
 			<t t-foreach="docs" t-as="o">
 				<t t-call="libro_inventario.external_layout_inventario">
-					<br/>
-					<br/>
-					<br/>
-					<br/>
-					<br/>
-					<br/>
 					<div class="page">
-						
 						<center>
 							<br/>
-							<table width='100%'>
+							<t t-set="total_general_inicial" t-value="0"/>
+							<t t-set="total_general_entradas" t-value="0"/>
+							<t t-set="total_general_salida" t-value="0"/>
+							<t t-set="total_general" t-value="0"/>
+
+							<t t-set="cat_general_inicial" t-value="0"/>
+							<t t-set="cat_general_entradas" t-value="0"/>
+							<t t-set="cat_general_salida" t-value="0"/>
+							<t t-set="cat_general" t-value="0"/>
+
+
+							<table width='100%' style="margin-top: 100px;" >
+								<thead >
 								<tr>
 									<th style="border-top: 1px solid black;" class="text-center"></th>
 									<th style="border-top: 1px solid black;" class="text-center"></th>
@@ -106,9 +111,11 @@
 									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Costo  Promedio</b></th>
 									<th style="border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center"><b>Total  Bolivares</b></th>
 								</tr>
+								</thead>
+
 								<t t-set="categoria" t-value=""/>
 								<t t-set="validar"   t-value="True"/>
-
+								<tbody>
 								<t t-foreach="o.libro" t-as="k">
 										<tr>
 											<th class="text-center"><b>LÍNEA:</b></th>
@@ -124,6 +131,10 @@
 										<t t-set="total_bolivares_entradas" t-value="0"/>
 										<t t-set="total_bolivares_salida" t-value="0"/>
 										<t t-set="total_bolivares" t-value="0"/>
+
+										
+
+
 										<tr t-foreach="k.line_id" t-as="l">
 											<th class="text-center"></th>
 											<th class="text-center"><span t-esc="l.name.name"/></th>
@@ -148,6 +159,17 @@
 											<t t-set="total_bolivares_entradas" t-value="l.total_bolivares_entradas + total_bolivares_entradas "/>
 											<t t-set="total_bolivares_salida" t-value="l.total_bolivares_salida + total_bolivares_salida  "/>
 											<t t-set="total_bolivares" t-value="l.total_bolivares + total_bolivares  "/>
+
+											<t t-set="total_general_inicial" t-value="total_bolivares_inicial  + total_general_inicial"/>
+											<t t-set="total_general_entradas" t-value=" total_general_entradas + total_bolivares_entradas"/>
+											<t t-set="total_general_salida" t-value="total_bolivares_salida +  total_general_salida"/>
+											<t t-set="total_general" t-value="total_general + total_bolivares "/>
+
+											<t t-set="cat_general_inicial" t-value="cat_general_inicial + l.cantidad_inicial "/>
+											<t t-set="cat_general_entradas" t-value=" cat_general_entradas  + l.cantidad_entradas"/>
+											<t t-set="cat_general_salida" t-value="cat_general_salida + l.cantidad_salidas"/>
+											<t t-set="cat_general" t-value="cat_general + l.total "/>
+
 										</tr>
 										<tr>
 											<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>TOTAL  LÍNEA:</b></th>
@@ -169,7 +191,28 @@
 										</tr>
 									
 								</t>
-								
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b>TOTAL  GENERAL:</b></th>
+										<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b><span t-esc="cat_general_inicial"/></b></th>
+										<th style="border-top: 1px solid black;" class="text-center"><b><span t-esc="total_general_inicial"/></b></th>
+										<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b><span t-esc="cat_general_entradas"/></b></th>
+										<th style="border-top: 1px solid black;" class="text-center"><b><span t-esc="total_general_entradas"/></b></th>
+										<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b><span t-esc="cat_general_salida"/></b></th>
+										<th style="border-top: 1px solid black;" class="text-center"><b><span t-esc="total_general_salida"/></b></th>
+										<th colspan="2" style="border-top: 1px solid black;" class="text-center"><b><span t-esc="cat_general"/></b></th>
+										<th style="border-top: 1px solid black;" class="text-center"><b><span t-esc="total_general"/></b></th> 
+									</tr>
+									<tr>
+										<th colspan="14" style="color: white;" class="text-center">
+										--------------------------------------------------------------------------------------------------------------------------------------
+										--------------------------------------------------------------------------------------------------------------------------------------
+										--------------------------------------------------------------------------------------------------------------------------------------
+										</th>
+									</tr>
+								</tfoot>
+
 							</table>
 						</center>
 					</div>
